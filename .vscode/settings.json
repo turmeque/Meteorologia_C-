@@ -59,5 +59,9 @@
   "C_Cpp.default.includePath": [
     "${workspaceFolder}/**",
     "${workspaceFolder}/include"
-  ]
+  ],
+  "files.associations": {
+    "iosfwd": "cpp",
+    "iostream": "cpp"
+  }
 }
