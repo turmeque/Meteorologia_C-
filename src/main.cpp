@@ -9,7 +9,7 @@ using namespace std;
 
 const int MAX_DATOS = 2000; // Máximo número de datos meteorológicos
 const string nombreArchivo = "datos_meteorologicos.txt";
-
+//-------------------------------------------------------------------------------------------------------------//
 struct DatosMeteorologicos
 {
   int anio;
@@ -113,7 +113,7 @@ int leerDatosMeteorologicos(string nombreArchivo, DatosMeteorologicos datos[],
   archivo.close();
   return 0;
 }
-
+//--------------------------------------------------------------------------------------------------------------------//
 // Blindaje para verificar que la fecha exista dentro del rango
 bool fechaValida(int anio, int mes, int dia, int anioMin, int mesMin,
                  int diaMin, int anioMax, int mesMax, int diaMax)
@@ -126,7 +126,7 @@ bool fechaValida(int anio, int mes, int dia, int anioMin, int mesMin,
     return false;
   return true;
 }
-
+//--------------------------------------------------------------------------------------------------------------------//
 // Blindaje para verificar que la fecha exacta exista
 bool fechaExiste(int anio, int mes, int dia, const DatosMeteorologicos datos[],
                  int numDatos)
@@ -140,7 +140,7 @@ bool fechaExiste(int anio, int mes, int dia, const DatosMeteorologicos datos[],
   }
   return false;
 }
-
+//-------------------------------------------------------------------------------------------------------------------//
 // Función para encontrar rangos y verificar que las fechas ingresadas existan
 // en la base de datos
 void encontrarRangos(int &anio1, int &mes1, int &dia1, int &anio2, int &mes2,
@@ -187,7 +187,7 @@ void encontrarRangos(int &anio1, int &mes1, int &dia1, int &anio2, int &mes2,
     }
   }
 }
-
+//----------------------------------------------------------------------------------------------------------//
 // Verifica que las fechas ingresadas existan en la base de datos desde la ficha
 // minima y maxima de la base de datos
 bool fechaEnRango(int anio, int mes, int dia, int anioInicio, int mesInicio,
@@ -203,193 +203,123 @@ bool fechaEnRango(int anio, int mes, int dia, int anioInicio, int mesInicio,
   return true;
 }
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-struct Usuario
-{
-  string usuario;
-  string contrasena;
+//--------------------------------------------------------------------------------------------------------//
+struct Usuario {
+    string usuario;
+    string contrasena;
 };
 
-
-
-void salidaTxt(const Usuario &usuario)
-{
-  ofstream salida("salida.txt");
-  if (salida.is_open())
-  {
-    salida << "RESULTADOS DEL ANÁLISIS METEREOLÓGICO:\n";
-    salida << ">>\n\nUsuario que hace el reporte: " << usuario.usuario << "\n\n";
-  }
-  else
-  {
-    cerr << "No se pudo abrir el archivo salida.txt" << endl;
-  }
-}
-
-bool validarCorreoElectronico(const string &correo)
-{
-  // Expresión regular para validar el formato de correo electrónico
-  const regex formatoCorreo(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
-
-  return regex_match(correo, formatoCorreo);
-}
-
-
-
-// Máximo número de usuarios
-// Función para registrar un nuevo usuario
-const int MAX_USUARIOS = 2000; // Máximo número de usuarios
-void registrarUsuario(Usuario usuarios[], int &numUsuarios,
-                      const string &nombreArchivo)
-{
- ofstream salida("salida.txt", ios::app);
-  if (numUsuarios >= MAX_USUARIOS)
-  {
-    cout << "No es posible registrar más usuarios. El límite ha sido alcanzado."
-         << endl;
-    return;
-  }
-  Usuario nuevoUsuario;
-  cout << "Ingrese nombre de correo electrónico: ";
-  cin >> nuevoUsuario.usuario;
-
-  // Validar el correo electrónico ingresado
-  if (!validarCorreoElectronico(nuevoUsuario.usuario))
-  {
-    cout << "El correo electrónico ingresado no tiene un formato válido." << endl;
-    return;
-  };
-
-  cout << "Ingrese contrasena: ";
-  cin >> nuevoUsuario.contrasena;
-
-  // Verificar si el nombre de usuario ya existe
-  for (int i = 0; i < numUsuarios; ++i)
-  {
-    if (usuarios[i].usuario == nuevoUsuario.usuario)
-    {
-      cout << "El correo de usuario ya existe. Por favor, elija otro." << endl;
-      return;
+const int MAX_USUARIOS = 100.000;
+//-------------------------------------------------------------------------------------------------------//
+void salidaTxt(const Usuario &usuario) {
+    ofstream salida("salida.txt");
+    if (salida.is_open()) {
+        salida << "RESULTADOS DEL ANÁLISIS METEREOLÓGICO:\n";
+        salida << ">>\n\nUsuario que hace el reporte: " << usuario.usuario << "\n\n";
+    } else {
+        cerr << "No se pudo abrir el archivo salida.txt" << endl;
     }
-  }
-
-  // Agregar el nuevo usuario al arreglo de usuarios
-  usuarios[numUsuarios++] = nuevoUsuario;
-  cout << "Usuario registrado exitosamente." << endl;
-  salida << "Usuario nuevo : " << nuevoUsuario.usuario  << "\n\n";
-  
-
-  // Guardar los usuarios en el archivo binario
-  ofstream archivo(nombreArchivo,
-                   ios::binary); // Abrir el archivo en modo binario y truncar
-                                 // (borrar contenido previo)
-  if (archivo.is_open())
-  {
-    // Escribir el número de usuarios en el archivo binario
-    archivo.write(reinterpret_cast<const char *>(&numUsuarios), sizeof(int));
-
-    // Escribir cada usuario en el archivo binario
-    for (int i = 0; i < numUsuarios; ++i)
-    {
-      archivo.write(reinterpret_cast<const char *>(&usuarios[i]),
-                    sizeof(Usuario));
-    }
-
-    archivo.close(); // Cerrar el archivo
-    
-  }
-  else
-  {
-    cout << "Error al abrir el archivo " << nombreArchivo << endl;
-  }
 }
-
-// Función para cargar los usuarios desde un archivo binario
-void cargarUsuarios(Usuario usuarios[], int &numUsuarios,
-                    const string &nombreArchivo)
-{
-  ifstream archivo(nombreArchivo,
-                   ios::binary); // Abrir el archivo en modo binario
-  if (archivo.is_open())
-  {
-    // Leer el número de usuarios del archivo binario
-    archivo.read(reinterpret_cast<char *>(&numUsuarios), sizeof(int));
-
-    // Leer cada usuario del archivo binario
-    for (int i = 0; i < numUsuarios; ++i)
-    {
-      archivo.read(reinterpret_cast<char *>(&usuarios[i]), sizeof(Usuario));
-    }
-
-    archivo.close(); // Cerrar el archivo
-  
-  }
-  else
-  {
-    cout << "El archivo " << nombreArchivo << " no existe. Se creará uno nuevo."
-         << endl;
-    // Crear un nuevo archivo y cerrarlo
-    ofstream newFile(nombreArchivo, ios::binary);
-    newFile.close();
-  }
+//-------------------------------------------------------------------------------------------------------//
+bool validarCorreoElectronico(const string &correo) {
+    const regex formatoCorreo(R"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})");
+    return regex_match(correo, formatoCorreo);
 }
-
-// Función para mostrar todos los usuarios registrados
-void mostrarUsuarios(const Usuario usuarios[], int numUsuarios)
-{
- ofstream salida("salida.txt", ios::app);
-
-  if (numUsuarios == 0)
-  {
-    salida << "No hay usuarios registrados." << endl;
-  }
-  else
-  {
-      salida << "Lista de usuarios registrados :" << endl;
-      salida << "!------------------------!" << endl;
-  for (int i = 0; i < numUsuarios; ++i)
-{
-  salida << "Usuario " << i + 1 << ": " << usuarios[i].usuario << endl;
-  salida << "------------------------" << endl;
-}
-
-  }
-}
-
-bool iniciarSesion(const Usuario usuarios[], int numUsuarios)
-{
-  ofstream salida("salida.txt", ios::app);
-  string nombreUsuario, contrasena;
-  cout << "Ingrese nombre de usuario: ";
-  cin >> nombreUsuario;
-  cout << "Ingrese contrasena: ";
-  cin.ignore(); // Limpiar el buffer de entrada antes de getline
-  getline(cin, contrasena);
-
-  for (int i = 0; i < numUsuarios; ++i)
-  {
-    if (usuarios[i].usuario == nombreUsuario &&
-        usuarios[i].contrasena == contrasena)
-    {
-      cout << endl;
-      salida<< "Inicio de sesión exitoso. Bienvenido, ¡🖐🤙" << nombreUsuario << "!🖐🤙" << endl;
-     
-      return true;
-    }
-  }
-  salida << "⚠ Nombre de usuario o contrasena incorrectos. Por favor, inténtelo de "
-          "nuevo.⚠"
-       << endl;
-  return false;
-}
-
-
-/////----------------------------------Eliminar Usuario(admin----------------------------------/////
-void eliminarUsuario(Usuario usuarios[], int &numUsuarios, const string &nombreArchivo) {
-     
+//------------------------------------------------------------------------------------------------------//
+void registrarUsuario(Usuario usuarios[], int &numUsuarios, const string &nombreArchivo) {
     ofstream salida("salida.txt", ios::app);
-    string nombreUsuario;
+    if (numUsuarios >= MAX_USUARIOS) {
+        cout << "🚩🚩No es posible registrar más usuarios. El límite ha sido alcanzado." << endl;
+        return;
+    }
+    Usuario nuevoUsuario;
+    cout << "Ingrese nombre de correo electrónico: ";
+    cin >> nuevoUsuario.usuario;
 
+    if (!validarCorreoElectronico(nuevoUsuario.usuario)) {
+        cout << "😡🤬El correo electrónico ingresado no tiene un formato válido." << endl;
+        return;
+    }
+
+    cout << "Ingrese contrasena: ";
+    cin >> nuevoUsuario.contrasena;
+
+    for (int i = 0; i < numUsuarios; ++i) {
+        if (usuarios[i].usuario == nuevoUsuario.usuario) {
+            cout << "😒El correo de usuario ya existe. Por favor, elija otro." << endl;
+            return;
+        }
+    }
+
+    usuarios[numUsuarios++] = nuevoUsuario;
+    cout << "✌Usuario registrado exitosamente." << endl;
+    salida << "Usuario nuevo : " << nuevoUsuario.usuario << "\n\n";
+
+    ofstream archivo(nombreArchivo, ios::binary);
+    if (archivo.is_open()) {
+        archivo.write(reinterpret_cast<const char *>(&numUsuarios), sizeof(int));
+        for (int i = 0; i < numUsuarios; ++i) {
+            archivo.write(reinterpret_cast<const char *>(&usuarios[i]), sizeof(Usuario));
+        }
+        archivo.close();
+    } else {
+        cout << "Error al abrir el archivo " << nombreArchivo << endl;
+    }
+}
+//---------------------------------------------------------------------------------------------------//
+void cargarUsuarios(Usuario usuarios[], int &numUsuarios, const string &nombreArchivo) {
+    ifstream archivo(nombreArchivo, ios::binary);
+    if (archivo.is_open()) {
+        archivo.read(reinterpret_cast<char *>(&numUsuarios), sizeof(int));
+        for (int i = 0; i < numUsuarios; ++i) {
+            archivo.read(reinterpret_cast<char *>(&usuarios[i]), sizeof(Usuario));
+        }
+        archivo.close();
+    } else {
+        cout << "El archivo " << nombreArchivo << " no existe. Se creará uno nuevo." << endl;
+        ofstream newFile(nombreArchivo, ios::binary);
+        newFile.close();
+    }
+}
+//--------------------------------------------------------------------------------------------------//
+void mostrarUsuarios(const Usuario usuarios[], int numUsuarios) {
+    ofstream salida("salida.txt", ios::app);
+    if (numUsuarios == 0) {
+        salida << "☹ No hay usuarios registrados." << endl;
+    } else {
+        salida << "Lista de usuarios registrados :" << endl;
+        salida << "!------------------------!" << endl;
+        for (int i = 0; i < numUsuarios; ++i) {
+            salida << "Usuario " << i + 1 << ": " << usuarios[i].usuario << endl;
+            salida << "------------------------" << endl;
+        }
+    }
+}
+//--------------------------------------------------------------------------------------------------//
+bool iniciarSesion(const Usuario usuarios[], int numUsuarios) {
+    ofstream salida("salida.txt", ios::app);
+    string nombreUsuario, contrasena;
+    cout << "Ingrese nombre de usuario: ";
+    cin >> nombreUsuario;
+    cout << "Ingrese contrasena: ";
+    cin.ignore();
+    getline(cin, contrasena);
+
+    for (int i = 0; i < numUsuarios; ++i) {
+        if (usuarios[i].usuario == nombreUsuario && usuarios[i].contrasena == contrasena) {
+            cout << endl;
+            salida << "Inicio de sesión exitoso. Bienvenido, ¡🖐🤙" << nombreUsuario << "!🖐🤙" << endl;
+            return true;
+        }
+    }
+    salida << "⚠ Nombre de usuario o contrasena incorrectos. Por favor, inténtelo de nuevo.⚠" << endl;
+    return false;
+}
+//-------------------------------------------------------------------------------------------------------//
+void eliminarUsuario(Usuario usuarios[], int &numUsuarios, const string &nombreArchivo) {
+    ofstream salida("salida.txt", ios::app);
+
+    string nombreUsuario;
     cout << "Ingrese nombre de usuario a eliminar: ";
     cin >> nombreUsuario;
 
@@ -402,7 +332,7 @@ void eliminarUsuario(Usuario usuarios[], int &numUsuarios, const string &nombreA
     }
 
     if (index == -1) {
-        salida << "Usuario no encontrado." << endl;
+        cout << "Usuario no encontrado." << endl;
         return;
     }
 
@@ -411,9 +341,9 @@ void eliminarUsuario(Usuario usuarios[], int &numUsuarios, const string &nombreA
     }
     numUsuarios--;
 
-    salida << "Usuario eliminado  .  " << nombreUsuario << endl;
+    salida << "Usuario eliminado 👉☠☠☠ " <<nombreUsuario<< endl;
 
-    ofstream archivo(nombreArchivo, ios::binary);
+    ofstream archivo(nombreArchivo, ios::binary | ios::trunc);
     if (archivo.is_open()) {
         archivo.write(reinterpret_cast<const char *>(&numUsuarios), sizeof(int));
         for (int i = 0; i < numUsuarios; ++i) {
@@ -427,9 +357,9 @@ void eliminarUsuario(Usuario usuarios[], int &numUsuarios, const string &nombreA
 
 
 
-//////////////----------------------------------------------------------------------------/////
+//-----------------------------------------------------------------------------------------------------------/////
 
-//-----------------------------------------------------------------------------------------------------------------------------------------------
+
 
 // Función para mostrar todos los datos meteorológicos, no se llama como tal
 // pero dado el caso que se necesite se instaura
@@ -453,6 +383,7 @@ void imprimirDatosMeteorologicos(const DatosMeteorologicos datos[],
   }
 }
 
+//-----------------------------------------------------------------------------------------------------//
 // Función para hallar la temperatura máxima en un rango de fechas
 void encontrarMaximaTemperatura(const DatosMeteorologicos datos[], int numDatos,
                                 int anioMin, int mesMin, int diaMin,
@@ -505,6 +436,7 @@ void encontrarMaximaTemperatura(const DatosMeteorologicos datos[], int numDatos,
   salida.close();
 }
 
+//--------------------------------------------------------------------------------------------------//
 // Función para hallar la temperatura mínima en un rango de fechas
 void encontrarMinimaTemperatura(const DatosMeteorologicos datos[], int numDatos,
                                 int anioMin, int mesMin, int diaMin,
@@ -555,6 +487,7 @@ void encontrarMinimaTemperatura(const DatosMeteorologicos datos[], int numDatos,
   salida.close();
 }
 
+//------------------------------------------------------------------------------------------------------//
 // Función para calcular el promedio de temperatura de un mes en específico
 void calcularPromedioTemperaturaMes(const DatosMeteorologicos datos[],
                                     int numDatos)
@@ -594,6 +527,7 @@ void calcularPromedioTemperaturaMes(const DatosMeteorologicos datos[],
   salida.close();
 }
 
+//---------------------------------------------------------------------------------------------//
 // Función para calcular el promedio de temperatura de un día en específico
 void calcularMayorPromedioHumedad(const DatosMeteorologicos datos[],
                                   int numDatos)
@@ -645,6 +579,7 @@ void calcularMayorPromedioHumedad(const DatosMeteorologicos datos[],
   salida.close();
 }
 
+//---------------------------------------------------------------------------------------------//
 void calcularMenorPromedioHumedad(const DatosMeteorologicos datos[],
                                   int numDatos)
 {
@@ -695,6 +630,7 @@ void calcularMenorPromedioHumedad(const DatosMeteorologicos datos[],
   salida.close();
 }
 
+//-----------------------------------------------------------------------------------------------//
 void mostrarDatosMeteorologicosPorRango(const DatosMeteorologicos datos[],
                                         int numDatos, int anioMin, int mesMin,
                                         int diaMin, int anioMax, int mesMax,
@@ -739,6 +675,8 @@ void mostrarDatosMeteorologicosPorRango(const DatosMeteorologicos datos[],
   salida.close();
 }
 
+
+//----------------------------------------------------------------------------------------//
 void probabilidadIncendio(const DatosMeteorologicos datos[], int numDatos)
 {
   int anio, mes, dia;
@@ -801,6 +739,8 @@ void probabilidadIncendio(const DatosMeteorologicos datos[], int numDatos)
   }
 }
 
+
+//-------------------------------------------------------------------------------------------------//
 void probabilidadTormenta(const DatosMeteorologicos datos[], int numDatos)
 {
   int anio, mes, dia;
@@ -863,6 +803,9 @@ void probabilidadTormenta(const DatosMeteorologicos datos[], int numDatos)
     cout << "Proceso realizado exitosamente y añadido al archivo salida.txt" << endl;
   }
 }
+
+
+//-------------------------------------------------------------------------------------------------//
 void agregarDatosMeteorologicos(DatosMeteorologicos datos[], int &numDatos,
                                 int anioMin, int mesMin, int diaMin,
                                 int anioMax, int mesMax, int diaMax)
@@ -962,6 +905,9 @@ void agregarDatosMeteorologicos(DatosMeteorologicos datos[], int &numDatos,
   }
 }
 
+
+
+//--------------------------------------------------------------------------------------------------------//
 int menuDatosMeteorologicos()
 {
   int opcion;
@@ -1032,13 +978,17 @@ int menuDatosMeteorologicos()
   return opcion;
 }
 
+
+//-----------------------------------------------------------------------------------------------//
 bool continuarPrograma()
 {
+  ofstream salida("salida.txt", ios::app);
+
   char respuesta;
   while (true)
   {
     cout << endl
-         << "¿Desea seguir operando? (s/n): ";
+         << "¿🧐Desea seguir operando? (s/n): ";
     cin >> respuesta;
     respuesta = tolower(respuesta); // Convertir a minúscula para hacer la
                                     // comparación y evitar errores
@@ -1049,8 +999,8 @@ bool continuarPrograma()
     }
     else if (respuesta == 'n')
     {
-      cout << endl
-           << "¡GRACIAS POR USAR NUESTRO PROGRAMA! (que no se te olvide "
+      cout << endl;
+      salida << "¡👌👌GRACIAS POR USAR NUESTRO PROGRAMA! (👵👶que no se te olvide "
               "revisar el archivo salida.txt)"
            << endl;
       return false;
@@ -1064,6 +1014,7 @@ bool continuarPrograma()
     }
   }
 }
+//-----------------------------------------------------------------------------------------------//
 int main()
 {
   ofstream salida("salida.txt", ios::app);
@@ -1080,7 +1031,7 @@ int main()
   {
 
     cout << endl
-         << "¡BIENVENIDO AL SISTEMA DE PREVISIONES METEOROLÓGICAS DE LA IDEAM!"
+         << "¡👋👏BIENVENIDO AL SISTEMA DE PREVISIONES METEOROLÓGICAS DE LA IDEAM!👏👋"
          << endl
          << endl;
     cout << "\n1. Iniciar sesión" << endl;
@@ -1183,9 +1134,9 @@ int main()
           }
           case 10:
           {
-           cout << "Cerrando sesion....................." << endl;
+           cout << "🏃‍♂️🏃‍♂️🏃‍♀️Cerrando sesion....................." << endl;
            salida << "Cerrando sesion....................." << endl;
-           salida << "Gracias por usar el programa. ¡Hasta luego!"<< endl;
+           salida << "🙋‍♂️🙋‍♀️Gracias por usar el programa. ¡Hasta luego!"<< endl;
            salida.close();
 
             main();
@@ -1193,7 +1144,7 @@ int main()
           }
           case 11:
           {
-            cout << "Gracias por usar el programa. ¡Hasta luego!" << endl;
+            cout << "🙋‍♂️🙋‍♀️Gracias por usar el programa. ¡Hasta luego!" << endl;
             return 0;
           }
 
@@ -1224,11 +1175,13 @@ int main()
       break;
     case 4:
      
-     // eliminarUsuario(usuarios, numUsuarios, nombreArchivo);
+      eliminarUsuario(usuarios, numUsuarios, nombreArchivo);
       main();
       break;
     case 5:
-      cout << "Gracias por usar el programa. ¡Hasta luego!" << endl;
+      cout << "👍👍Gracias por usar el programa. ¡Hasta luego!" << endl;
+
+      salida << "👍👍Gracias por usar el programa. ¡Hasta luego!" << endl;
       return 0;
       break;
     default:

@@ -1,2 +1,37 @@
+Gracias por usar el programa. ¡Hasta luego!
 Lista de usuarios registrados :
 !------------------------!
+Usuario 1: johan@gmail.com
+------------------------
+Usuario nuevo : paul@gmail.com
+
+Lista de usuarios registrados :
+!------------------------!
+Usuario 1: johan@gmail.com
+------------------------
+Usuario 2: paul@gmail.com
+------------------------
+Usuario eliminado 👉☠☠☠ paul@gmail.com
+Lista de usuarios registrados :
+!------------------------!
+Usuario 1: johan@gmail.com
+------------------------
+Lista de usuarios registrados :
+!------------------------!
+Usuario 1: johan@gmail.com
+------------------------
+Inicio de sesión exitoso. Bienvenido, ¡🖐🤙johan@gmail.com!🖐🤙
+Cerrando sesion.....................
+🙋‍♂️🙋‍♀️Gracias por usar el programa. ¡Hasta luego!
+Lista de usuarios registrados :
+!------------------------!
+Usuario 1: johan@gmail.com
+------------------------
+⚠ Nombre de usuario o contrasena incorrectos. Por favor, inténtelo de nuevo.⚠
+Inicio de sesión exitoso. Bienvenido, ¡🖐🤙johan@gmail.com!🖐🤙
+1) --> Los datos meteorológicos en el rango de fechas especificado son: 
+Fecha            Temperatura        Humedad     Vel. Viento     Presión Atmosférica   Cond. Meteor.
+2020-02-02           10.1             35             10                1025             Soleado
+2020-02-03           24.3             58             13                1009            Lluvioso
+Cerrando sesion.....................
+🙋‍♂️🙋‍♀️Gracias por usar el programa. ¡Hasta luego!
